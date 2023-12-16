@@ -23,16 +23,17 @@ const todoList = () => {
     };
   
     const toDisplayableList = (list) => {
-        let formattedList = list
-            .map((task) => {
-                const status = task.completed ? "[x]" : "[ ]";
-                const dueDate = task.dueDate;
-                return `${status} ${task.title} ${dueDate}`;
-              })
-        .join("\n");
+  let formattedList = list
+    .map((task) => {
+      const status = task.completed ? "[x]" : "[ ]";
+      const dueDate = task.dueDate === today ? '' : formattedDate(new Date(task.dueDate));
+      return `${status} ${task.title} ${dueDate ? dueDate : ''}`;
+    })
+    .join("\n");
 
-       return formattedList;
-     };
+  return formattedList;
+};
+
 
   
     return {
