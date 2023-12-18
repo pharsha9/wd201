@@ -1,55 +1,84 @@
 const todoList = () => {
-    const all = [];
-  
-    const todayStr = new Date().toLocaleDateString("en-CA");
-  
-    const add = (todoItem) => {
-      all.push(todoItem);
-    };
-    const markAsComplete = (index) => {
-      all[index].completed = true;
-    };
-  
-    const overdue = () => {
-      return all.filter((item) => item.dueDate < todayStr);
-    };
-  
-    const dueToday = () => {
-      return all.filter((item) => item.dueDate === todayStr);
-    };
-  
-    const dueLater = () => {
-      return all.filter((item) => item.dueDate > todayStr);
-    };
-  
-    const toDisplayableList = (list) => {
-  let formattedList = list
-    .map((task) => {
-      const status = task.completed ? "[x]" : "[ ]";
-      const dueDate = task.dueDate === today ? '' : formattedDate(new Date(task.dueDate));
-      return `${status} ${task.title} ${dueDate ? dueDate : ''}`;
-    })
-    .join("\n");
+  all = []
+  const add = (todoItem) => {
+      all.push(todoItem)
+  }
+  const markAsComplete = (index) => {
+      all[index].completed = true
+  }
 
-  return formattedList;
-};
+  const overdue = () => {
+      // Write the date check condition here and return the array
+      // of overdue items accordingly.
+      const overdueTasks = [];
+      const currentDate = new Date().toLocaleDateString("en-CA");
 
+      for (let i = 0; i < all.length; i++) {
+          if (all[i].dueDate < currentDate) {
+              overdueTasks.push(all[i]);
+          }
+      }
 
-  
-    return {
+      return overdueTasks;
+
+  }
+
+  const dueToday = () => {
+      // Write the date check condition here and return the array
+      // of todo items that are due today accordingly.
+      const currentDate = new Date().toISOString().split("T")[0];
+      return all.filter((item) => item.dueDate === currentDate);
+
+  }
+
+  const dueLater = () => {
+      // Write the date check condition here and return the array
+      // of todo items that are due later accordingly.
+      const upcomingDueDates = [];
+      const currentDate = new Date().toLocaleDateString("en-CA");
+
+      for (let i = 0; i < all.length; i++) {
+          if (all[i].dueDate > currentDate) {
+              upcomingDueDates.push(all[i]);
+          }
+      }
+
+      return upcomingDueDates;
+
+  }
+
+  const toDisplayableList = (list) => {
+      // Format the To-Do list here, and return the output string
+      // as per the format given above.
+      return list
+          .map((task) => {
+              let checkbox = task.completed ? "[x]" : "[ ]";
+              const formattedDate =
+                  task.dueDate !== new Date().toISOString().split("T")[0]
+                      ? " " + task.dueDate
+                      : "";
+              return `${checkbox} ${task.title}${formattedDate}`;
+          })
+          .join("\n");
+
+  }
+
+  return {
       all,
       add,
       markAsComplete,
       overdue,
       dueToday,
       dueLater,
-      toDisplayableList,
-    };
+      toDisplayableList
   };
-  
-  module.exports = todoList;
+};
 
-  const todos = todoList();
+// ####################################### #
+// DO NOT CHANGE ANYTHING BELOW THIS LINE. #
+// ####################################### #
+
+const todos = todoList();
 
 const formattedDate = d => {
   return d.toISOString().split("T")[0]
@@ -89,3 +118,4 @@ let itemsDueLater = todos.dueLater()
 let formattedItemsDueLater = todos.toDisplayableList(itemsDueLater)
 console.log(formattedItemsDueLater)
 console.log("\n\n")
+module.exports = todoList;
