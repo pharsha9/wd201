@@ -1,18 +1,56 @@
-const db = require("../models");
+const todoList = require("../todo");
+const todos = todoList();
 
-describe("Todolist Test Suite", () => {
-  beforeAll(async () => {
-    await db.sequelize.sync({ force: true });
-  });
-
-  test("Should add new todo", async () => {
-    const todoItemsCount = await db.Todo.count();
-    await db.Todo.addTask({
-      title: "Test todo",
-      completed: false,
-      dueDate: new Date(),
+describe("TodoList Test Suite", () => {
+    beforeAll(() => {
+        const testTodo = {
+            title: "Test Todo",
+            completed: false,
+            dueDate: new Date().toLocaleDateString("en-CA"),
+        };
+        todos.add(testTodo);
     });
-    const newTodoItemsCount = await db.Todo.count();
-    expect(newTodoItemsCount).toBe(todoItemsCount + 1);
-  });
+
+    test("Should add a new Todo", () => {
+        const initialTodoCount = todos.all.length;
+        todos.add({
+            title: "Test Todo",
+            completed: false,
+            dueDate: new Date().toLocaleDateString("en-CA"),
+        });
+
+        expect(todos.all.length).toBe(initialTodoCount + 1);
+    });
+
+    test("Mark a todo as complete", () => {
+        todos.add({
+            title: "Overdue Todo",
+            completed: false,
+            dueDate: new Date(new Date().setDate(new Date().getDate() - 1)).toLocaleDateString("en-CA"),
+        });
+
+        expect(todos.overdue().length).toBe(todos.all.length + 1);
+    });
+
+    test("List of todos due today", () => {
+        const initialDueTodayCount = todos.dueToday().length;
+        todos.add({
+            title: "dueToday Todo",
+            completed: false,
+            dueDate: new Date().toLocaleDateString("en-CA"),
+        });
+
+        expect(todos.dueToday().length).toBe(initialDueTodayCount + 1);
+    });
+
+    test("List of todos due later", () => {
+        const initialDueLaterCount = todos.dueLater().length;
+        todos.add({
+            title: "UnderDue Todo",
+            completed: false,
+            dueDate: new Date().toLocaleDateString("en-CA"),
+        });
+
+        expect(todos.dueLater().length).toBe(initialDueLaterCount + 1);
+    });
 });
