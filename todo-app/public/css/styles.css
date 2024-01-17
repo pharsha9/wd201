@@ -1,8 +1,4 @@
-body {
-  background-color: rgb(255, 255, 255);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-.Todo-Item:hover .trash-icon {
-  display: block;
+body{
+    background-color: rgb(11, 171, 129);
+    font-family: Arial, Helvetica, sans-serif;
 }
